@@ -1,21 +1,183 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMI Calculator</title>
+    <title>Fitness Checker App</title>
+    <style>
+        /* styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #bmi-result, #heart-rate-result {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button.clear-btn {
+            background-color: #f44336;
+        }
+
+        button.clear-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
 </head>
 <body>
-    <h1>BMI Calculator</h1>
-    <form action="/bmi" method="POST">
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" name="weight" required>
-        <br>
-        <label for="height">Height (m):</label>
-        <input type="number" id="height" name="height" step="0.01" required>
-        <br><br>
-        <button type="submit">Calculate BMI</button>
-    </form>
+
+    <div class="container">
+        <h1>Fitness Checker App</h1>
+        
+        <!-- BMI Section -->
+        <div class="section">
+            <h2>Calculate BMI</h2>
+            <label for="weight">Enter your weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter weight (kg)">
+            
+            <label for="height">Enter your height (m):</label>
+            <input type="number" id="height" step="0.01" placeholder="Enter height (m)">
+            
+            <button onclick="calculateBmi()">Calculate BMI</button>
+            <div id="bmi-result"></div>
+        </div>
+        
+        <!-- Heart Rate Section -->
+        <div class="section">
+            <h2>Calculate Heart Rate</h2>
+            <label for="heart-rate">Enter your heart rate (BPM):</label>
+            <input type="number" id="heart-rate" placeholder="Enter heart rate (BPM)">
+            
+            <label for="age">Enter your age:</label>
+            <input type="number" id="age" placeholder="Enter your age">
+            
+            <button onclick="calculateHeartRate()">Calculate Heart Rate</button>
+            <div id="heart-rate-result"></div>
+        </div>
+
+        <!-- Clear Button -->
+        <button onclick="clearInputs()">Clear</button>
+    </div>
+
+    <script>
+        // JavaScript Functionality
+
+        // Function to calculate BMI
+        function calculateBmi() {
+            let weight = document.getElementById("weight").value;
+            let height = document.getElementById("height").value;
+
+            if (weight <= 0 || height <= 0) {
+                alert("Please enter valid values for weight and height.");
+                return;
+            }
+
+            let bmi = weight / (height ** 2);
+            let category = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = "Normal weight";
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = "Overweight";
+            } else {
+                category = "Obese";
+            }
+
+            document.getElementById("bmi-result").innerText = `BMI: ${bmi.toFixed(2)} - Category: ${category}`;
+        }
+
+        // Function to calculate Heart Rate zones
+        function calculateHeartRate() {
+            let heartRate = document.getElementById("heart-rate").value;
+            let age = document.getElementById("age").value;
+
+            if (heartRate <= 0 || age <= 0) {
+                alert("Please enter valid values for heart rate and age.");
+                return;
+            }
+
+            let maxHeartRate = 220 - age;
+            let moderateZoneLow = maxHeartRate * 0.50;
+            let moderateZoneHigh = maxHeartRate * 0.70;
+            let vigorousZoneLow = maxHeartRate * 0.70;
+            let vigorousZoneHigh = maxHeartRate * 0.85;
+
+            document.getElementById("heart-rate-result").innerHTML = `
+                Heart Rate: ${heartRate} BPM<br>
+                Maximum Heart Rate: ${maxHeartRate} BPM<br>
+                Moderate Zone: ${moderateZoneLow.toFixed(2)} - ${moderateZoneHigh.toFixed(2)} BPM<br>
+                Vigorous Zone: ${vigorousZoneLow.toFixed(2)} - ${vigorousZoneHigh.toFixed(2)} BPM
+            `;
+        }
+
+        // Function to clear all inputs and results
+        function clearInputs() {
+            document.getElementById("weight").value = "";
+            document.getElementById("height").value = "";
+            document.getElementById("heart-rate").value = "";
+            document.getElementById("age").value = "";
+            document.getElementById("bmi-result").innerText = "";
+            document.getElementById("heart-rate-result").innerHTML = "";
+        }
+    </script>
+
 </body>
 </html>
